@@ -9,8 +9,10 @@ services:
     restart: unless-stopped
     command:
       - "--api.insecure=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.swarmMode=true"
       - "--accesslog=true"
+      - "--providers.docker.defaultRule=Host(`{{ .Name }}.{{ index .Labels \"customLabel\"}}`)"
     ports:
       - "80:80"
       - "8080:8080"
