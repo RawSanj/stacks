@@ -29,16 +29,17 @@ services:
   redis:
     image: bitnami/redis:7.2.3
     restart: unless-stopped
-    labels:
-      - traefik.enabled=false
     environment:
       - REDIS_PASSWORD=SuperSecretRedisPassword
     ports:
       - "6379:6379"
     volumes:
       - 'redis_data:/bitnami/redis/data'
+    deploy: 
+      labels:
+        - traefik.enabled=false
 
-  spring-chat-jvm:
+  spring-chat-jvmx:
     image: rawsanj/spring-redis-websocket:3.2.0-jvm
     restart: unless-stopped
     environment:
@@ -52,8 +53,9 @@ services:
       replicas: 3
       mode: replicated   
       labels:
-        - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
+        - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) || HostRegexp(`{subdomain:[a-z]+}.direct.labs.play-with-docker.com`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
         - traefik.http.services.chat-service.loadbalancer.server.port=8080
+        - traefik.http.routers.chat.service=chat-service
       
   spring-chat-native:
     image: rawsanj/spring-redis-websocket:3.2.0-native
@@ -69,8 +71,9 @@ services:
       replicas: 3
       mode: replicated    
       labels:
-        - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
+        - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) || HostRegexp(`{subdomain:[a-z]+}.direct.labs.play-with-docker.com`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
         - traefik.http.services.chat-service.loadbalancer.server.port=8080
+        - traefik.http.routers.chat.service=chat-service
       
 volumes:
   redis_data:
