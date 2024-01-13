@@ -14,7 +14,6 @@ services:
       - traefik.http.routers.proxy.service=proxy
     command:
       - "--api.insecure=true"
-      - "--providers.docker.endpoint=tcp://127.0.0.1:2377"
       - "--providers.docker.swarmMode=true"
       - "--accesslog=true"
     ports:
