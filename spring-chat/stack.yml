@@ -53,7 +53,7 @@ services:
       mode: replicated   
       labels:
         - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
-        - traefik.http.services.chat-service.loadbalancer.server.port=8081
+        - traefik.http.services.chat-service.loadbalancer.server.port=8080
       
   spring-chat-native:
     image: rawsanj/spring-redis-websocket:3.2.0-native
@@ -70,7 +70,7 @@ services:
       mode: replicated    
       labels:
         - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
-        - traefik.http.services.chat-service.loadbalancer.server.port=8082
+        - traefik.http.services.chat-service.loadbalancer.server.port=8080
       
 volumes:
   redis_data:
