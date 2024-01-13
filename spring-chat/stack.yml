@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.8'
 services:
 
   # Traefik Reverse Proxy for routing various applications.
@@ -44,10 +44,12 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PASSWORD=SuperSecretRedisPassword
     ports:
-      - "8080"
+      - "8080:8080"
     depends_on:
       - redis
-
+    deploy:
+      replicas: 2
+      
   spring-chat-native:
     image: rawsanj/spring-redis-websocket:3.2.0-native
     restart: unless-stopped
@@ -58,10 +60,11 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PASSWORD=SuperSecretRedisPassword
     ports:
-      - "8080"
+      - "8080:8080"
     depends_on:
       - redis
-
+    deploy:
+      replicas: 2
+      
 volumes:
   redis_data:
-    driver: local
