@@ -7,11 +7,6 @@ services:
     image: traefik:v2.10.5 # The official Traefik docker image
     container_name: traefik
     restart: unless-stopped
-    labels:
-      - traefik.http.routers.proxy.rule=Host(`proxy.docker.localhost`)
-      - traefik.http.routers.proxy.tls=false
-      - traefik.http.services.proxy.loadbalancer.server.port=8080
-      - traefik.http.routers.proxy.service=proxy
     command:
       - "--api.insecure=true"
       - "--providers.docker.swarmMode=true"
@@ -20,6 +15,11 @@ services:
       - "80:80"
       - "8080:8080"
     deploy:
+      labels:
+        - traefik.http.routers.proxy.rule=PathPrefix(`/reverse`) || Host(`proxy.docker.localhost`)
+        - traefik.http.routers.proxy.tls=false
+        - traefik.http.services.proxy.loadbalancer.server.port=8080
+        - traefik.http.routers.proxy.service=proxy  
       placement:
         constraints:
           - node.role == manager      
@@ -72,7 +72,7 @@ services:
       mode: replicated    
       labels:
         - traefik.http.routers.chat.rule=PathPrefix(`/`) || Host(`chat.docker.localhost`) || HostRegexp(`{subdomain:[a-z]+}.direct.labs.play-with-docker.com`) # PathPrefix(`/`) rule is helpful when running on play-with-docker.com to access chat app directly on port 80
-        - traefik.http.services.chat-service.loadbalancer.server.port=8080
+        - traefik.http.services.chat-service.loadbalancer.server.port=8082
         - traefik.http.routers.chat.service=chat-service
       
 volumes:
