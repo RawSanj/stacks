@@ -47,8 +47,6 @@ services:
       - "8080"
     depends_on:
       - redis
-    deploy:
-      replicas: 2
 
   spring-chat-native:
     image: rawsanj/spring-redis-websocket:3.2.0-native
@@ -63,8 +61,6 @@ services:
       - "8080"
     depends_on:
       - redis
-    deploy:
-      replicas: 2
 
 volumes:
   redis_data:
